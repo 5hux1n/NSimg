@@ -53,15 +53,15 @@ NSimg助手是一款为 NodeSeek 原生编辑器提供 NodeImage 图片上传与
 
 ### JS 版
 
-NSimg助手同时提供独立的 Userscript 版本。
+NSimg助手同时提供独立的 js 版本。
 
 JS 版无需安装浏览器扩展，仅需安装：
 
 `NSimg.user.js`
 
-目前已在 **iOS / iPadOS Safari + Userscripts** 环境完成测试。
+目前已在 **iOS / iPadOS Safari + Userscripts** 环境以及 **Alook浏览器** 完成测试。
 
-其他支持 Userscript 的浏览器及脚本管理器理论上也可运行，但由于不同环境存在差异，兼容性暂未逐一验证。
+其他支持 js 的浏览器及脚本管理器理论上也可运行，但由于不同环境存在差异，兼容性暂未逐一验证。
 
 #### Safari 安装
 
