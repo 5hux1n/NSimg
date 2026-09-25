@@ -2,7 +2,7 @@
 
 NSimg助手是一款为 NodeSeek 原生编辑器提供 NodeImage 图片上传与管理能力的 Chrome / Edge 扩展。
 
-无需改变原有发帖习惯，即可在 NodeSeek 编辑器中直接粘贴、拖拽或选择图片上传至 NodeImage，并自动插入 Markdown 图片链接。
+无需改变原有发帖习惯，适配NodeSeek桌面版以及移动端原生样式。
 
 ## 功能
 
@@ -33,10 +33,9 @@ NSimg助手是一款为 NodeSeek 原生编辑器提供 NodeImage 图片上传与
 - 🖼️ **多图上传**  
   支持一次处理多张图片，并保持正确的 Markdown 插入顺序。
 
-- ⏯️ **随时启用 / 停止**  
-  可通过扩展面板一键启用或停止 NSimg助手。
-
 ## 安装
+
+### Chrome / Edge 扩展版
 
 目前 NSimg助手以 ZIP 压缩包形式发布，需要通过 Chrome / Edge 的「开发者模式」安装。
 
@@ -52,15 +51,35 @@ NSimg助手是一款为 NodeSeek 原生编辑器提供 NodeImage 图片上传与
 >
 > 安装完成后请保留解压后的扩展目录。如果删除或移动该目录，浏览器可能无法继续正常加载扩展。
 
+### JS 版
+
+NSimg助手同时提供独立的 Userscript 版本。
+
+JS 版无需安装浏览器扩展，仅需安装：
+
+`NSimg.user.js`
+
+目前已在 **iOS / iPadOS Safari + Userscripts** 环境完成测试。
+
+其他支持 Userscript 的浏览器及脚本管理器理论上也可运行，但由于不同环境存在差异，兼容性暂未逐一验证。
+
+#### Safari 安装
+
+1. 安装并启用 Userscripts Safari 扩展。
+2. 下载最新版本的 `NSimg.user.js`。
+3. 将脚本添加至 Userscripts。
+4. 确保脚本允许在 NodeSeek 页面运行。
+5. 打开或刷新 NodeSeek 页面即可使用。
+
+JS 版同样支持 NodeImage 图片上传、历史图片管理、图片插入、原图查看及图片删除等主要功能。
+
+> JS 版与 Chrome / Edge 扩展版采用不同的运行方式，但主要功能及使用体验保持一致。
+
 ## 使用
 
 安装完成后，打开 NodeSeek 发帖或回复编辑器。
 
-你可以：
-
-- 直接在编辑器中 **粘贴图片**
-- 将图片 **拖入编辑器**
-- 点击编辑器原有的 **图片按钮**选择本地图片
+- 点击编辑器原有的 **图片按钮**选择手机相册图片
 - 点击编辑器中的 **图片管理入口**查看 NodeImage 历史图片
 
 图片上传完成后，NSimg助手会自动将对应的 Markdown 图片链接插入当前编辑位置。
@@ -71,38 +90,17 @@ NSimg助手是一款为 NodeSeek 原生编辑器提供 NodeImage 图片上传与
 
 如果浏览器中已经登录 NodeImage，NSimg助手会自动尝试获取并保存 API Key。
 
-如果没有自动获取成功，可以：
-
-1. 点击浏览器工具栏中的 NSimg助手图标。
-2. 点击 **「获取Api Key」**重新获取。
-3. 或在扩展面板中手动填写 NodeImage API Key。
-
-配置成功后即可正常使用图片上传及图片管理功能。
-
-## 更新
-
-下载新版本 ZIP 并解压后，在浏览器扩展管理页面更新对应的扩展目录，然后点击 NSimg助手的 **「重新加载」**即可。
-
-如果直接使用新版本目录，也可以删除旧版本扩展后，通过「加载已解压的扩展程序」重新选择新目录。
+如果没有自动获取成功，可以根据提示指引完成登录操作。
 
 ## 支持的浏览器
+
+### 扩展版
 
 - Google Chrome
 - Microsoft Edge
 - 其他兼容 Chromium Manifest V3 扩展的浏览器
 
-## 项目
+### JS 版
 
-GitHub: https://github.com/5hux1n/nsimg
-
-NodeImage: https://www.nodeimage.com
-
-## 说明
-
-NSimg助手是面向 NodeSeek / NodeImage 使用场景开发的第三方辅助扩展，与 NodeSeek、NodeImage 官方无隶属关系。
-
-扩展主要用于简化 NodeSeek 编辑器中的图片上传、插入及 NodeImage 图片管理操作。
-
-## License
-
-本项目的开源许可信息请参阅仓库中的 LICENSE 文件。
+- iOS Safari + Userscripts（已测试）
+- 其他支持 Userscript 的浏览器及脚本管理器（未验证）
