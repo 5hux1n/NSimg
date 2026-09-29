@@ -1,106 +1,50 @@
-# NSimg助手
+<div align="center">
 
-NSimg助手是一款为 NodeSeek 原生编辑器提供 NodeImage 图片上传与管理能力的 Chrome / Edge 扩展。
+<img src=".github/assets/nsimg.png" alt="NSimg 图标" width="64">
 
-无需改变原有发帖习惯，适配NodeSeek桌面版以及移动端原生样式。
+# NSimg 助手
 
-## 功能
+在 NodeSeek 原生编辑器中上传、插入和管理 NodeImage 图片。
 
-- 📋 **粘贴上传**  
-  在 NodeSeek 编辑器中直接粘贴剪贴板中的图片，自动上传并插入 Markdown。
+粘贴截图、选择本地图片或打开历史图库，图片链接会插入当前帖子。
 
-- 🖱️ **拖拽上传**  
-  将本地图片拖入编辑器即可完成上传。
+</div>
 
-- 🖼️ **本地图片上传**  
-  接管 NodeSeek 编辑器原生「图片」按钮，选择本地图片上传并自动插入。
+## Install
 
-- 📚 **NodeImage 图片管理**  
-  可直接在 NodeSeek 编辑器中查看已上传至 NodeImage 的图片。
+选择一种安装方式：
 
-- ✏️ **快速插入历史图片**  
-  点击图片缩略图，即可将对应图片插入当前编辑器。
+- **Chrome / Edge 扩展：**下载 [v1.0.1 扩展 ZIP](https://github.com/5hux1n/NSimg/releases/download/v1.0.1/nsimg-v1.0.1.zip)，解压到固定目录。在 `chrome://extensions` 或 `edge://extensions` 开启开发者模式，选择“加载已解压的扩展程序”，指向解压后的 `nsimg-v1.0.1` 文件夹。
+- **独立 JS：**下载 [v1.0.1 用户脚本](https://github.com/5hux1n/NSimg/releases/download/v1.0.1/NSimg.user.js)，导入支持用户脚本的浏览器或脚本管理器，并允许它在 `nodeseek.com` 上运行。
 
-- 👁️ **查看原图**  
-  可从图片管理窗口快速查看已上传图片的原图。
+当前未发布到浏览器扩展商店。安装扩展后请保留解压目录。
 
-- 🗑️ **删除图片**  
-  支持直接删除 NodeImage 中不再需要的图片。
+## Quickstart
 
-- 🔑 **自动获取 API Key**  
-  已登录 NodeImage 时会自动尝试获取并保存 API Key，通常无需手动配置。
+1. 打开或刷新 NodeSeek 的发帖、回复编辑器。
+2. 点击编辑器原有的“图片”按钮选择图片，或直接在编辑器中粘贴截图。扩展版还支持拖拽图片。
+3. 上传完成后检查正文中的 Markdown 图片链接。点击编辑器顶部的“图片”入口，可查看、插入或删除历史图片。
 
-- 🖼️ **多图上传**  
-  支持一次处理多张图片，并保持正确的 Markdown 插入顺序。
+如果未能自动获取 API Key，可在扩展弹窗或独立 JS 的图库设置中填写 NodeImage API Key。使用已有 API Key 上传图片无需依赖浏览器中的 NodeImage 登录会话。
 
-## 安装
+## What you can do
 
-### Chrome / Edge 扩展版
+- **粘贴与批量上传：**从剪贴板或文件选择器上传多张图片，依次插入链接。
+- **管理历史图片：**查看缩略图、打开原图、将历史图片插入编辑器或删除图片。
+- **保留编辑器样式：**复用 NodeSeek 的图片按钮和界面颜色，不增加发帖步骤。
+- **确认插入结果：**扩展在编辑器确认写入后才显示插入成功；失败时提示从图库找回已上传图片。
 
-目前 NSimg助手以 ZIP 压缩包形式发布，需要通过 Chrome / Edge 的「开发者模式」安装。
+## Browser support
 
-1. 下载最新版本的 NSimg助手 ZIP 压缩包。
-2. 将 ZIP **完整解压**到一个固定目录，请勿直接从压缩包中运行。
-3. 打开 Chrome / Edge 的扩展管理页面。
-4. 开启页面中的 **「开发者模式」**。
-5. 点击 **「加载已解压的扩展程序」**。
-6. 选择刚刚解压得到的 NSimg助手目录。
-7. 打开或刷新 NodeSeek 页面即可使用。
+| 版本 | 环境 | 状态 |
+| --- | --- | --- |
+| 扩展 | Chrome、Edge 的 Manifest V3 环境 | 支持；v1.0.1 尚未完成浏览器实测 |
+| 独立 JS | Safari + Userscripts、Alook | 早期版本已实测；v1.0.1 尚未完成设备复测 |
+| 独立 JS | Via | 脚本上传链路尚未解决 |
 
-> **注意：NSimg助手目前未通过 Chrome Web Store / Edge Add-ons 发布，因此必须开启浏览器「开发者模式」才能安装。**
->
-> 安装完成后请保留解压后的扩展目录。如果删除或移动该目录，浏览器可能无法继续正常加载扩展。
+不同浏览器的用户脚本接口和跨域规则可能不同。独立 JS 的 v1.0.1 沿用已工作的通用上传方式，没有加入 Via 专用请求代码。
 
-### JS 版
+## Notes
 
-NSimg助手同时提供独立的 js 版本。
-
-JS 版无需安装浏览器扩展，仅需安装：
-
-`NSimg.user.js`
-
-目前已在 **iOS / iPadOS Safari + Userscripts** 环境以及 **Alook浏览器** 完成测试。
-
-其他支持 js 的浏览器及脚本管理器理论上也可运行，但由于不同环境存在差异，兼容性暂未逐一验证。
-
-#### Safari 安装
-
-1. 安装并启用 Userscripts Safari 扩展。
-2. 下载最新版本的 `NSimg.user.js`。
-3. 将脚本添加至 Userscripts。
-4. 确保脚本允许在 NodeSeek 页面运行。
-5. 打开或刷新 NodeSeek 页面即可使用。
-
-JS 版同样支持 NodeImage 图片上传、历史图片管理、图片插入、原图查看及图片删除等主要功能。
-
-> JS 版与 Chrome / Edge 扩展版采用不同的运行方式，但主要功能及使用体验保持一致。
-
-## 使用
-
-安装完成后，打开 NodeSeek 发帖或回复编辑器。
-
-- 点击编辑器原有的 **图片按钮**选择手机相册图片
-- 点击编辑器中的 **图片管理入口**查看 NodeImage 历史图片
-
-图片上传完成后，NSimg助手会自动将对应的 Markdown 图片链接插入当前编辑位置。
-
-## API Key
-
-正常情况下无需手动配置。
-
-如果浏览器中已经登录 NodeImage，NSimg助手会自动尝试获取并保存 API Key。
-
-如果没有自动获取成功，可以根据提示指引完成登录操作。
-
-## 支持的浏览器
-
-### 扩展版
-
-- Google Chrome
-- Microsoft Edge
-- 其他兼容 Chromium Manifest V3 扩展的浏览器
-
-### JS 版
-
-- iOS Safari + Userscripts（已测试）
-- 其他支持 Userscript 的浏览器及脚本管理器（未验证）
+- **图片格式：**扩展上传前检查 PNG、JPEG、GIF、WebP、BMP 的实际文件头；独立 JS 将所选图片文件交给浏览器上传。
+- **版本记录：**查看 [更新日志](CHANGELOG.md)及 [GitHub Releases](https://github.com/5hux1n/NSimg/releases)。
