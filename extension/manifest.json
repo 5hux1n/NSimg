@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "NSimg助手",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "为 NodeSeek 原生编辑器提供 NodeImage 图片上传：粘贴、拖拽、图片按钮。",
   "permissions": [
     "storage",

@@ -14,8 +14,8 @@
 
 选择一种安装方式：
 
-- **Chrome / Edge 扩展：**下载 [v1.0.1 扩展 ZIP](https://github.com/5hux1n/NSimg/releases/download/v1.0.1/nsimg-v1.0.1.zip)，解压到固定目录。在 `chrome://extensions` 或 `edge://extensions` 开启开发者模式，选择“加载已解压的扩展程序”，指向解压后的 `nsimg-v1.0.1` 文件夹。
-- **独立 JS：**下载 [v1.0.1 用户脚本](https://github.com/5hux1n/NSimg/releases/download/v1.0.1/NSimg.user.js)，导入支持用户脚本的浏览器或脚本管理器，并允许它在 `nodeseek.com` 上运行。
+- **Chrome / Edge 扩展：**下载 [v1.0.2 扩展 ZIP](https://github.com/5hux1n/NSimg/releases/download/v1.0.2/nsimg-v1.0.2.zip)，解压到固定目录。在 `chrome://extensions` 或 `edge://extensions` 开启开发者模式，选择“加载已解压的扩展程序”，指向解压后的 `nsimg-v1.0.2` 文件夹。
+- **独立 JS：**下载 [v1.0.2 用户脚本](https://github.com/5hux1n/NSimg/releases/download/v1.0.2/NSimg.user.js)，导入支持用户脚本的浏览器或脚本管理器，并允许它在 `nodeseek.com` 上运行。
 
 当前未发布到浏览器扩展商店。安装扩展后请保留解压目录。
 
@@ -25,7 +25,7 @@
 2. 点击编辑器原有的“图片”按钮选择图片，或直接在编辑器中粘贴截图。扩展版还支持拖拽图片。
 3. 上传完成后检查正文中的 Markdown 图片链接。点击编辑器顶部的“图片”入口，可查看、插入或删除历史图片。
 
-如果未能自动获取 API Key，可在扩展弹窗或独立 JS 的图库设置中填写 NodeImage API Key。使用已有 API Key 上传图片无需依赖浏览器中的 NodeImage 登录会话。
+如果未能自动获取 API Key，可在扩展弹窗或独立 JS 的图库设置中填写 NodeImage API Key。独立 JS 支持明文多行输入，填写后点击“保存”。使用已有 API Key 上传图片无需依赖浏览器中的 NodeImage 登录会话。
 
 ## What you can do
 
@@ -38,11 +38,10 @@
 
 | 版本 | 环境 | 状态 |
 | --- | --- | --- |
-| 扩展 | Chrome、Edge 的 Manifest V3 环境 | 支持；v1.0.1 尚未完成浏览器实测 |
-| 独立 JS | Safari + Userscripts、Alook | 早期版本已实测；v1.0.1 尚未完成设备复测 |
-| 独立 JS | Via | 脚本上传链路尚未解决 |
+| 扩展 | Chrome、Edge 的 Manifest V3 环境 | 支持；v1.0.2 尚未完成浏览器实测 |
+| 独立 JS | Alook | 当前上传流程已通过用户真机测试 |
+| 独立 JS | Safari + Userscripts | 早期版本已实测；本次设置界面尚未完成设备复测 |
 
-不同浏览器的用户脚本接口和跨域规则可能不同。独立 JS 的 v1.0.1 沿用已工作的通用上传方式，没有加入 Via 专用请求代码。
 
 ## Notes
 
