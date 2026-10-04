@@ -1,1 +1,128 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NSImg 助手 · 发帖时，图片顺手就进去了</title><meta name="description" content="在 NodeSeek 原生编辑器中上传、插入和管理 NodeImage 图片。"><meta property="og:title" content="NSImg 助手 · 发帖时，图片顺手就进去了"><meta property="og:description" content="在 NodeSeek 原生编辑器中上传、插入和管理 NodeImage 图片。"><meta property="og:type" content="website"><link rel="canonical" href="https://nsimg.goforit.si/"><link rel="stylesheet" href="site-assets/style.css"><script src="site-assets/home.js" defer></script></head><body><a class="skip" href="#main">跳到主要内容</a><div class="wrap"><header><a class="brand" href="/"><img src="site-assets/icon.png" alt="">NSImg<span class="small">助手</span></a><nav><a href="#install">安装</a><a href="#style">论坛样式</a><a href="https://github.com/5hux1n/NSimg">GitHub ↗</a></nav></header><main id="main"><section class="hero"><span class="label">NODESEEK × NODEIMAGE</span><h1>写到这里，<br>图片也跟上了。</h1><p class="lead">粘贴截图，选几张图片，或者翻翻历史图库。<br>上传、插入、管理，都留在你熟悉的编辑器里。</p><a class="btn primary" href="#install">选择安装方式 ↓</a><div class="editor"><div class="editor-head"><b>发一条帖子</b><span>交互示意</span></div><div class="toolbar"><span>B　<i>I</i>　↗</span><button id="demo-upload">▧ 插入示例图片</button></div><div class="editor-content"><p>分享一下今天的小发现。</p><div id="demo-result" hidden><div class="demo-image"><span>▧</span><span>图片已插入</span></div><code>![小发现](示例图片地址)</code></div><p class="placeholder" id="demo-hint">试试上方的图片按钮，看看插入流程。</p></div><div class="editor-foot"><span id="demo-state" role="status">这里只演示插入流程，不上传图片或调用 API。</span><button id="demo-reset">重置</button></div></div><div class="flow"><span>01　选择或粘贴</span><b>→</b><span>02　上传到 NodeImage</span><b>→</b><span>03　链接进入帖子</span></div></section><section id="install"><span class="label">CHOOSE YOUR WAY</span><h2>用什么浏览器，<br>就选哪种安装方式。</h2><div class="install-options"><article><div class="option-icon">▣</div><h3>Chrome / Edge 扩展</h3><p>Manifest V3 扩展，支持文件选择、粘贴和拖拽上传。</p><a class="btn primary" href="https://github.com/5hux1n/NSimg/releases/download/v1.0.2/nsimg-v1.0.2.zip">下载扩展 ZIP ↓</a><ol><li>解压到固定目录。</li><li>在扩展页面开启开发者模式。</li><li>加载已解压的扩展程序。</li></ol><p class="small muted">尚未发布到扩展商店；v1.0.2 仍需浏览器实测。</p></article><article><div class="option-icon">{ }</div><h3>独立用户脚本</h3><p>用于支持用户脚本的浏览器或管理器，包括 Alook 与 Safari + Userscripts。</p><a class="btn" href="https://github.com/5hux1n/NSimg/releases/download/v1.0.2/NSimg.user.js">下载用户脚本 ↓</a><ol><li>导入脚本。</li><li>允许在 nodeseek.com 运行。</li><li>刷新编辑器，使用图片入口。</li></ol><p class="small muted">Alook 上传流程已有真机测试；其他环境按 README 查看验证状态。</p></article></div><details><summary>需要自己填写 NodeImage API Key 吗？</summary><p>如果无法自动获取，在扩展弹窗或用户脚本的图库设置中填写并保存。已有 API Key 的上传无需依赖 NodeImage 登录会话。</p></details><details><summary>以前上传的图片还能找回来吗？</summary><p>从图库中查看缩略图、打开原图，再次插入帖子或删除图片。确认编辑器已写入后才显示插入成功。</p></details></section><section id="style" class="style-section"><span class="label">A SMALL EXTRA</span><h2>顺手，把论坛也整理一下。</h2><p>仓库还提供 NodeSeek 纯 CSS 样式：头像、个人资料卡、搜索入口与夜间配色。放到论坛个人资料的自定义 style 中即可使用。</p><a href="https://github.com/5hux1n/NSimg#nodeseek-论坛美化-css">查看完整 CSS 与使用说明 ↗</a></section></main><footer><span>NSImg · 为 NodeSeek 编辑器做的小工具</span><a href="https://github.com/5hux1n/NSimg/issues">反馈问题 ↗</a></footer></div></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f8fa">
+  <title>NSImg 助手 · 图片上传与 NodeSeek 论坛美化</title>
+  <meta name="description" content="为 NodeSeek 原生编辑器提供 NodeImage 图片上传、Markdown 插入与历史图库。分别下载浏览器扩展或独立 JS，一键复制论坛美化 CSS。">
+  <meta property="og:title" content="NSImg 助手 · 发帖时，让图片顺手跟上">
+  <meta property="og:description" content="扩展与独立 JS 下载、完整使用教程、可直接复制的 NodeSeek 美化 CSS。">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://nsimg.goforit.si/">
+  <link rel="icon" href="site-assets/icon.png" type="image/png">
+  <link rel="stylesheet" href="site-assets/style.css?v=20261004-2">
+  <script src="site-assets/home.js?v=20261004-2" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">跳到主要内容</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="#"><img src="site-assets/icon.png" width="36" height="36" alt=""><span>NSImg <small>助手</small></span></a>
+    <nav aria-label="主导航"><a href="#features">功能</a><a href="#download">下载</a><a href="#guide">使用说明</a><a href="#css">论坛美化 CSS</a></nav>
+    <a class="source-link" href="https://github.com/5hux1n/NSimg" aria-label="GitHub 项目仓库">GitHub <span aria-hidden="true">↗</span></a>
+  </div>
+</header>
+<main id="main">
+  <section class="hero container" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <span class="product-tag"><span class="dot" aria-hidden="true"></span>为 NodeSeek 原生编辑器而做</span>
+      <h1 id="hero-title">发帖的思路，<br>别被传图打断。</h1>
+      <p class="hero-lead">粘贴截图、选择图片，或从历史图库再用一张。上传到 NodeImage，Markdown 图片链接直接插入当前帖子。</p>
+      <div class="actions"><a class="button primary" href="#download">下载上传助手 <span aria-hidden="true">↓</span></a><a class="button secondary" href="#css">复制论坛美化 CSS</a></div>
+      <p class="hero-note">扩展 / 独立 JS：v1.0.2<br>论坛美化是独立的纯 CSS，不必安装上传助手。</p>
+    </div>
+    <div class="workbench" aria-label="图片插入流程交互示意">
+      <div class="workbench-top"><span><i class="dot" aria-hidden="true"></i> 发帖编辑器</span><span class="demo-badge">交互示意</span></div>
+      <div class="editor-toolbar"><span aria-hidden="true"><b>B</b> <i>I</i> <span>⌘</span></span><button id="demo-insert" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="9" r="1.5"/><path d="m4 18 6-6 4 4 3-3 4 5"/></svg>插入示例图片</button></div>
+      <div class="editor-body"><p class="post-title">分享一下今天的小发现。</p><p id="demo-hint" class="editor-placeholder">文字写到这里，图片也应该跟得上。<br>点上方图片按钮，试试插入流程。</p><div id="demo-result" hidden><img src="site-assets/demo-landscape.svg" width="680" height="300" alt="山与海的示例插画"><code>![今日小发现](https://example.com/photo.png)</code></div></div>
+      <div class="editor-status"><span id="demo-state" role="status">本页仅演示，不上传文件或调用图床 API。</span><button id="demo-reset" type="button">重置</button></div>
+      <div class="gallery-strip"><span>历史图片<br><small>点击缩略图试试</small></span><button type="button" class="gallery-thumb" data-demo-gallery aria-label="插入历史示例图片：山与海"><img src="site-assets/demo-landscape.svg" width="92" height="62" alt=""></button><span class="gallery-caption">旧图片，也能直接回到正文。</span></div>
+    </div>
+  </section>
+
+  <section id="features" class="feature-section container" aria-labelledby="features-title">
+    <div class="section-heading"><div><h2 id="features-title">上传、插入、找回。<br>就在熟悉的编辑器里。</h2></div><p>复用论坛原有的图片按钮和界面颜色。保留你写帖的方式，把重复操作交给助手。</p></div>
+    <div class="feature-grid">
+      <article><span class="feature-symbol" aria-hidden="true">⌘V</span><h3>截图直接粘贴</h3><p>将光标放在正文编辑区，粘贴剪贴板图片；也可点击原有图片按钮，选择多张本地图片依次上传。</p></article>
+      <article><svg class="feature-symbol icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M6 8h20v18H6zM6 18l7-6 6 5 4-3 3 4"/><circle cx="22" cy="11" r="2"/></svg><h3>图片链接自动插入</h3><p>上传后将 Markdown 链接写入当前帖子。扩展在编辑器确认写入后才提示成功；未插入的图片可从图库找回。</p></article>
+      <article><svg class="feature-symbol icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="1"/><rect x="18" y="5" width="9" height="9" rx="1"/><rect x="5" y="18" width="9" height="9" rx="1"/><rect x="18" y="18" width="9" height="9" rx="1"/></svg><h3>历史图库随时再用</h3><p>查看缩略图、打开原图、插入历史图片或删除不需要的图片。上传过的内容，不必再传一次。</p></article>
+      <article><svg class="feature-symbol icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="8" width="24" height="17" rx="3"/><path d="M9 15h10m-10 4h6M22 4v8m-4-4 4-4 4 4"/></svg><h3>多图上传与拖拽</h3><p>两种版本均支持批量选择与粘贴。Chrome / Edge 扩展另外支持拖拽图片进入编辑器。</p></article>
+    </div>
+  </section>
+
+  <section id="download" class="download-section" aria-labelledby="download-title">
+    <div class="container">
+      <div class="section-heading"><div><h2 id="download-title">选对版本，再开始。</h2><p>两个安装包，两个独立下载地址。</p></div><a class="text-link" href="https://github.com/5hux1n/NSimg/releases/tag/v1.0.2">查看 v1.0.2 发布说明 <span aria-hidden="true">↗</span></a></div>
+      <div class="download-grid">
+        <article class="download-card extension-card">
+          <div class="package-heading"><span class="package-mark" aria-hidden="true"><svg viewBox="0 0 28 28"><path d="M4 7h7a3 3 0 1 1 6 0h7v7a3 3 0 1 0 0 6v4h-8a3 3 0 1 0-6 0H4v-7a3 3 0 1 0 0-6z"/></svg></span><span class="package-type">浏览器扩展</span><span class="version">v1.0.2</span></div>
+          <h3>Chrome / Edge</h3><p>桌面端扩展，支持粘贴、选择文件、拖拽上传和历史图库。</p>
+          <a class="button primary download-link" href="downloads/nsimg-v1.0.2.zip" download="nsimg-v1.0.2.zip">下载扩展 ZIP <span aria-hidden="true">↓</span></a>
+          <div class="file-label">nsimg-v1.0.2.zip</div>
+          <ol class="install-steps"><li>下载后解压到固定目录，保留该目录。</li><li>打开浏览器扩展页，开启“开发者模式”。</li><li>选择“加载已解压的扩展程序”，指向解压后的 <code>nsimg-v1.0.2</code> 文件夹。</li><li>刷新 NodeSeek 编辑器，按下方说明开始上传。</li></ol>
+          <div class="address-row"><code>chrome://extensions</code><button class="copy-small" type="button" data-copy-text="chrome://extensions" aria-label="复制 Chrome 扩展页面地址">复制</button></div>
+          <div class="address-row"><code>edge://extensions</code><button class="copy-small" type="button" data-copy-text="edge://extensions" aria-label="复制 Edge 扩展页面地址">复制</button></div>
+          <p class="package-note">尚未上架扩展商店。支持 Manifest V3 环境；v1.0.2 尚未完成 Chrome / Edge 浏览器实测。</p>
+        </article>
+        <article class="download-card script-card">
+          <div class="package-heading"><span class="package-mark script-mark" aria-hidden="true">{ }</span><span class="package-type">独立用户脚本</span><span class="version">v1.0.2</span></div>
+          <h3>Alook / Safari 等</h3><p>适用于支持用户脚本的浏览器或脚本管理器，提供上传、插入与图库管理。</p>
+          <a class="button dark download-link" href="downloads/NSimg.user.js" download="NSimg.user.js">下载独立 JS <span aria-hidden="true">↓</span></a>
+          <div class="file-label">NSimg.user.js</div>
+          <ol class="install-steps"><li>下载 <code>NSimg.user.js</code>，导入浏览器的用户脚本功能或脚本管理器。</li><li>Safari 需要配合 Userscripts 等脚本工具，并授予网站权限。</li><li>启用脚本，允许它在 <code>nodeseek.com</code> 上运行。</li><li>刷新论坛编辑器；如缺少 API Key，从图库设置中填写并保存。</li></ol>
+          <div class="support-list"><div><b>Alook</b><span>当前上传流程已通过用户真机测试</span></div><div><b>Safari + Userscripts</b><span>早期版本已实测；v1.0.2 设置界面待设备复测</span></div><div><b>其他脚本环境</b><span>需自行确认网络权限与上传兼容性</span></div></div>
+          <p class="package-note">独立 JS 不使用扩展 ZIP 的安装方式。建议只启用一种上传助手，避免同时拦截编辑器操作。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="guide" class="guide-section container" aria-labelledby="guide-title">
+    <div class="guide-intro"><h2 id="guide-title">从安装到第一张图片。</h2><p>在 NodeSeek 发帖或回复时使用。已有 NodeImage API Key，可直接填写，无需依赖浏览器登录会话。</p><a class="text-link" href="https://www.nodeimage.com/">打开 NodeImage <span aria-hidden="true">↗</span></a></div>
+    <div class="guide-content">
+      <ol class="usage-steps">
+        <li><h3>准备 API Key</h3><p>可先登录 NodeImage，让助手自动获取。自动获取失败时，手动填写已有 Key：</p><div class="key-instructions"><p><b>扩展版：</b>点击工具栏里的 NSImg 图标，在 API Key 输入框粘贴；修改会自动保存。也可以点击“获取Api Key”重试。</p><p><b>独立 JS：</b>打开图库，点击齿轮设置，在多行输入框填写 API Key，再点击“保存”。</p></div></li>
+        <li><h3>打开正文编辑区</h3><p>打开或刷新发帖、回复编辑器。将光标放到图片应插入的位置。</p></li>
+        <li><h3>粘贴或选择图片</h3><p>粘贴截图，或点击编辑器原有的“图片”按钮选择本地文件。扩展也支持拖拽；多张图片会依次处理。</p></li>
+        <li><h3>检查链接，再发布</h3><p>上传完成后检查正文中的 Markdown 图片链接。需要旧图时，点击编辑器顶部的“图片”入口，点击图库缩略图插入。</p></li>
+      </ol>
+      <aside class="privacy-note"><h3>图片传到哪里？</h3><p>图片上传至 NodeImage，链接写入 NodeSeek 编辑器。API Key 保存在本机：扩展使用浏览器扩展存储，独立 JS 使用论坛站点的本地存储。本官网不收集 API Key，也不执行实际上传。</p></aside>
+    </div>
+  </section>
+
+  <section id="css" class="css-section" aria-labelledby="css-title">
+    <div class="container">
+      <div class="section-heading"><div><span class="module-tag">独立模块 · 无需安装 JS</span><h2 id="css-title">论坛美化，复制就能用。</h2><p>把完整 CSS 放进 NodeSeek 个人资料的自定义 style。<br>保留编辑器操作，让头像、资料卡、导航和日夜配色更统一。</p></div><a class="button secondary" href="downloads/nodeseek.min.css" download="nodeseek.min.css">下载 CSS 文件 <span aria-hidden="true">↓</span></a></div>
+      <div class="css-overview">
+        <div class="forum-preview" id="forum-preview"><div class="forum-preview-bar"><span>论坛布局示意</span><button id="theme-preview" type="button" aria-pressed="false">查看夜间配色</button></div><div class="mini-nav"><b>NodeSeek</b><span>分类　搜索　＋</span></div><div class="mini-layout"><div class="mini-posts"><div><span class="mini-avatar">N</span><span><b>今天有什么新发现？</b><small>发帖与回复，还是熟悉的样子</small></span></div><div><span class="mini-avatar blue">S</span><span><b>分享工具与日常</b><small>更紧凑的帖子列表</small></span></div><div><span class="mini-avatar peach">K</span><span><b>记录一个小技巧</b><small>文字和图片，放在一起</small></span></div></div><div class="mini-profile"><span class="mini-avatar profile-avatar">N</span><b>你的资料卡</b><span class="mini-tools">☆　✉　◷　⚙　↗</span><div class="mini-stats"><span>帖子<br><b>12</b></span><span>评论<br><b>86</b></span></div><small>Seek.li｜NodeQuality<br>NodeScriptKit｜NodeHatch</small></div></div><p class="preview-caption">展示布局思路，不是论坛截图；实际样式以浏览器和论坛页面为准。</p></div>
+        <div class="css-feature-list"><h3>这份样式会调整什么？</h3><ul><li>全局圆角头像，重排桌面资料卡和操作图标。</li><li>统一资料卡、导航、搜索按钮与页脚的日夜配色。</li><li>压缩帖子列表布局，重构搜索和发帖入口。</li><li>移动端签到入口移到顶部导航栏，保留侧滑菜单。</li><li>整理六个快捷入口，隐藏 beta 标识、轮播及部分广告和冗余面板。</li></ul><p>纯样式调整，不提供图片上传功能。使用前建议备份原有自定义 style。</p></div>
+      </div>
+      <div class="code-container" aria-labelledby="code-title">
+        <div class="code-toolbar"><div><h3 id="code-title">nodeseek.min.css</h3><span>完整可用代码 · <span id="css-size">8112 字符 / 8118 字节</span></span></div><div class="code-actions"><button id="select-css" type="button">全选代码</button><button id="copy-css" class="copy-main" type="button">复制完整 CSS</button></div></div>
+        <label class="sr-only" for="css-code">NodeSeek 论坛美化完整 CSS，可选中复制</label>
+        <textarea id="css-code" readonly spellcheck="false" wrap="soft" aria-describedby="css-copy-status">body{--r:max(8px,calc((100vw - 1080px)/2));--n:#111;--f:#555;--g:#f5f5f5;--l:#c9c9c9;--c:#fff;--t:#555;--b:#eee}.dark-layout{--n:#fff;--f:#fff;--g:#202328;--l:#777;--c:#25282d;--t:#ddd;--b:#41454c}@keyframes ns-sign-in{0%{opacity:0;visibility:hidden}to{opacity:1;visibility:visible}}@media(max-width:760px){#left-slide-panel{transition:left .5s!important}#left-slide-panel[style*=&quot;-100%&quot;]{position:absolute!important;top:0!important;bottom:auto!important;overflow:visible!important;pointer-events:none!important}#left-slide-panel[style*=&quot;-100%&quot;] [title=签到]{position:absolute!important;left:calc(200vw - 165px)!important;right:auto!important;top:0!important;width:33px!important;height:30px!important;z-index:99999!important;display:flex!important;align-items:center!important;justify-content:center!important;pointer-events:auto!important;color:var(--f)!important;animation:ns-sign-in .5s step-end!important}}footer,footer .contain{background:var(--g)!important;color:var(--f)!important}footer a{color:var(--f)!important}.topic-carousel-wrapper,.beta-icon{display:none!important}.avatar-normal{border-radius:50%!important;object-fit:cover!important}@media(min-width:761px){#nsk-body{display:block!important;position:relative!important;overflow:visible!important}#nsk-body-left{width:100%!important;margin:0!important}#nsk-right-panel-container .nsk-panel:not(.quick-access){display:none!important}#nsk-head .nav-menu{anchor-name:--n!important}#nsk-left-panel-container{&amp;{position:fixed!important;position-anchor:--n!important;top:anchor(top)!important;left:anchor(right)!important;z-index:1002!important}&amp;,&amp; .category-list{width:max-content!important;height:40px!important;margin:0!important;padding:0!important;background:0 0!important;border:0!important;box-shadow:none!important}&amp;&gt;.nsk-panel:not(.category-list),&amp;&gt;div:not(.nsk-panel),&amp; .category-list :is(h4,.iconpark-icon,li:nth-child(-n+7)){display:none!important}}:is(.nav-menu,.category-list ul){&amp;{display:flex!important;align-items:center!important;height:40px!important;margin:0!important;padding:0!important}&amp; li{margin:0!important;padding:0!important;border:0!important;background:0 0!important}&amp; li a{display:flex!important;align-items:center!important;justify-content:center!important;height:40px!important;margin:0!important;padding:0 9px!important;color:var(--n)!important;-webkit-text-fill-color:var(--n)!important;background:0 0!important;border:0!important;border-radius:0!important;box-shadow:none!important;font-size:13px!important;font-weight:400!important;line-height:40px!important;white-space:nowrap!important;opacity:1!important}}.user-card{&amp;{color:var(--t)!important;margin:0!important;padding:0!important;background:var(--c)!important;border:0!important;border-radius:16px!important;box-shadow:0 3px 8px #0004!important;overflow:hidden!important}&amp; .user-head{height:auto!important;min-height:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;gap:12px!important;padding:22px 16px 16px!important;margin:0!important;background:var(--c)!important}&amp; .user-head&gt;.menu{display:contents!important}&amp; .user-head&gt;a{margin:0!important}&amp; .user-head .avatar-normal{width:72px!important;height:72px!important;margin:0!important}&amp; .menu&gt;a{margin:0!important;font-size:16px!important}&amp; .menu&gt;div{display:grid!important;align-items:center!important;text-align:center!important;grid-auto-flow:column!important;grid-auto-columns:1fr!important;gap:0!important;width:100%!important;margin:0!important}&amp; .menu&gt;div svg{margin:0!important}&amp; .menu&gt;div&gt;a:empty{display:none!important}&amp; .menu&gt;div&gt;*{display:flex!important;justify-content:center!important;margin:0!important}&amp; :is(.user-stat,.stat-block,.stat-block&gt;div,.stat-block a){background:var(--c)!important}&amp; .user-stat{margin:0!important;padding:16px!important;border:0!important;border-top:1px solid var(--b)!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:16px!important}&amp; :is(.user-stat,.stat-block){border-radius:0!important;box-shadow:none!important}&amp; .stat-block{display:flex!important;flex-direction:column!important;gap:12px!important}&amp; .stat-block&gt;div,&amp; .stat-block&gt;div&gt;a{transform:none!important;display:flex!important;align-items:center!important;gap:6px!important}&amp; :is(a,svg){color:var(--t)!important}&amp; .usercard-button-group{padding:0 16px 16px!important}}body&gt;.user-card{z-index:1104!important}#nsk-right-panel-container{position:fixed!important;top:56px!important;right:var(--r)!important;width:248px!important;display:flex!important;flex-wrap:wrap!important;justify-content:center!important;gap:0!important;margin:0!important;padding:16px!important;z-index:1102!important;background:var(--c)!important;border-radius:16px!important;box-shadow:0 3px 8px #0004!important;&amp;&gt;.user-card{margin:-16px -16px 8px!important;flex:0 0 280px!important;border-bottom:1px solid var(--b)!important;border-radius:16px 16px 0 0!important;box-shadow:none!important}&amp;&gt;div:has(&gt;.promotation-item),&amp; :is(.quick-access,.quick-access ul,.quick-access li:has([href=&quot;/lucky&quot;])){display:contents!important}&amp; .quick-access :is(h4,li:not(:has([href=&quot;/lucky&quot;]))){display:none!important}&amp; :is(.promotation-item,[href=&quot;/lucky&quot;]){width:auto!important;display:flex!important;align-items:center!important;height:28px!important;margin:0!important;padding:0!important;font-size:12px!important;border:0!important;box-shadow:none!important;color:var(--t)!important;background:none!important}&amp; [href=&quot;/lucky&quot;]{order:1!important}&amp; .promotation-item:not(:has(img:is([alt=&quot;Seek.li&quot;],[alt=NodeQuality],[alt=NodeScriptKit],[alt=NodeHatch],[alt=&quot;NFD2.0&quot;]))){display:none!important}&amp; :is(.promotation-item img,[href=&quot;/lucky&quot;] svg){display:none!important}&amp; .promotation-item{&amp;:before{content:var(--s)}&amp;[href*=&quot;seek.li&quot;]{--s:&quot;Seek.li&quot;}&amp;[href*=nodequality]{--s:&quot;NodeQuality&quot;}&amp;[href*=NodeScriptKit]{--s:&quot;NodeScriptKit&quot;}&amp;[href*=&quot;132849&quot;]{--s:&quot;NodeHatch&quot;}&amp;[href*=&quot;286885&quot;]{--s:&quot;NFD2.0&quot;}}&amp; :is([href*=&quot;seek.li&quot;],[href*=nodequality],[href*=&quot;132849&quot;],[href*=&quot;286885&quot;]):after{content:&quot;｜&quot;;margin:0 4px;color:var(--b)}}#nsk-head{&amp; .search-box{right:calc(var(--r) + 80px)!important;overflow:visible!important}&amp; .color-theme-switcher{right:calc(var(--r) + 40px)!important}&amp; #search-site2{position:absolute!important;inset:0!important;margin:0!important;cursor:pointer!important;outline:0!important;width:32px!important;padding:0!important;color:transparent!important;background:0 0!important;box-shadow:none!important}&amp; #search-site2::placeholder{color:transparent!important}&amp; .search-icon{position:absolute!important;top:50%!important;left:50%!important;right:auto!important;width:16px!important;height:16px!important;margin:0!important;transform:translate(-50%,-50%)!important;pointer-events:none!important;z-index:2!important}}#nsk-head :is(.search-box,.color-theme-switcher),div:has(&gt;.btn.new-discussion){position:fixed!important;top:4px!important;z-index:1102!important;width:32px!important;height:32px!important;margin:0!important;padding:0!important}#nsk-head :is(#search-site2,.color-theme-switcher),.btn.new-discussion{height:32px!important;border:1px solid var(--l)!important;border-radius:4px!important;box-sizing:border-box!important}#nsk-head .color-theme-switcher,.btn.new-discussion{width:32px!important;display:flex!important;align-items:center!important;justify-content:center!important;margin:0!important;padding:0!important;color:var(--f)!important;background:0 0!important;box-shadow:none!important;line-height:1!important}div:has(&gt;.btn.new-discussion){right:var(--r)!important;display:block!important}.btn.new-discussion :is(span,svg){display:none!important}.btn.new-discussion:before{content:&quot;+&quot;;display:block!important;color:var(--f)!important;font:400 22px/28px Arial,sans-serif!important}}@media(761px&lt;=width&lt;=1400px){#nsk-right-panel-container&gt;:not(:has(&gt;.btn.new-discussion)){display:none!important}#nsk-right-panel-container{display:contents!important}}@media(761px&lt;=width&lt;=1100px){#nsk-left-panel-container{display:none!important}}@media(min-width:1401px){#nsk-body{width:780px!important;left:-150px!important}}.with-mask{z-index:1200!important}</textarea>
+        <div class="code-footer"><span id="css-copy-status" role="status">复制的是全部原始 CSS，不含额外标签。</span><a href="downloads/nodeseek.min.css">直接打开文件</a></div>
+      </div>
+      <ol class="css-install"><li><b>复制完整代码</b><span>点击上方复制按钮，或全选代码手动复制。</span></li><li><b>替换自定义 style</b><span>打开论坛个人资料，找到自定义 style，替换原有内容。</span></li><li><b>保存并刷新</b><span>刷新论坛，检查日夜配色和手机布局。</span></li></ol>
+      <p class="css-compat">当前代码 8112 字符 / 8118 UTF-8 字节，低于 8180 限额。使用 CSS 嵌套、:has() 和锚点定位，需要支持这些特性的浏览器。移动端滚动与侧滑表现请以实际设备为准。</p>
+    </div>
+  </section>
+
+  <section class="faq-section container" aria-labelledby="faq-title">
+    <div class="faq-intro"><h2 id="faq-title">遇到问题，<br>从这里检查。</h2><p>上传助手与论坛美化可分开使用；安装方式不同，排查步骤也不同。</p><a class="text-link" href="https://github.com/5hux1n/NSimg/issues">反馈问题 <span aria-hidden="true">↗</span></a></div>
+    <div class="faq-list">
+      <details><summary>上传后，正文里没有图片链接？</summary><p>确认当前页面有发帖或回复编辑器，光标在正文中。图片可能已经上传成功，可打开历史图库重新插入；不要因插入失败反复上传同一张图片。</p></details>
+      <details><summary>API Key 获取失败，或上传请求报错？</summary><p>自动获取需要相应的 NodeImage 登录状态；已有 Key 可以直接手动填写。独立 JS 填写后需要点击“保存”。查看错误信息和网络权限：401 / 403 可能是认证或访问拒绝，其他网络错误也会影响上传，不代表保存的 Key 一定失效。</p></details>
+      <details><summary>支持哪些图片格式？</summary><p>扩展会检查 PNG、JPEG、GIF、WebP、BMP 的真实文件头，避免扩展名与内容不符。独立 JS 将所选图片交给浏览器上传，最终能否接收由 NodeImage 决定。</p></details>
+      <details><summary>删除图库图片会影响已有帖子吗？</summary><p>图库删除操作会删除 NodeImage 上的图片，无法恢复。使用该图片链接的历史帖子可能因此无法显示，请在删除前确认。</p></details>
+      <details><summary>装了助手，为什么论坛样式没有变化？</summary><p>上传助手不会自动安装论坛美化。需要在上方独立 CSS 模块复制完整代码，再到论坛个人资料的自定义 style 中保存。CSS 无需扩展或独立 JS 即可使用。</p></details>
+      <details><summary>美化样式没有生效，怎么恢复？</summary><p>确认复制了完整代码、保存成功并刷新页面。样式依赖较新的浏览器特性；论坛页面更新也可能影响选择器。清空自定义 style，或恢复事先备份的内容，即可撤销美化。</p></details>
+    </div>
+  </section>
+</main>
+<footer class="site-footer"><div class="container footer-inner"><div><a class="brand" href="#"><img src="site-assets/icon.png" width="30" height="30" alt=""><span>NSImg 助手</span></a><p>为 NodeSeek 发帖做的小工具。</p></div><nav aria-label="页脚导航"><a href="https://github.com/5hux1n/NSimg">源码</a><a href="https://github.com/5hux1n/NSimg/blob/main/CHANGELOG.md">更新日志</a><a href="https://mjh.im/">作者主页</a></nav><p class="footer-note">独立开源项目，与 NodeSeek、NodeImage 官方无关联。</p></div></footer>
+<div id="copy-feedback" class="copy-feedback" role="status"></div>
+<noscript><p class="noscript-note">下载和使用说明仍可查看。复制 CSS 时，请在代码框中手动全选复制。</p></noscript>
+</body>
+</html>
