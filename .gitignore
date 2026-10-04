@@ -1,3 +1,6 @@
 .DS_Store
 ._*
 *.zip
+
+# Published website download, copied unchanged from the release.
+!docs/downloads/nsimg-v1.0.2.zip
