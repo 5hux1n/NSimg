@@ -59,15 +59,57 @@ test('upload preserves binary bytes and the previously working cookie policy',as
   assert.equal(output.markdown,'![fixture](https://cdn.nodeimage.com/i/fixture.jpg)');
   assert.equal(requests,1);
 });
-test('failed upload is not retried through a lossy GM body or allowed to clear the Key',async()=>{
-  let requests=0,gmCalls=0;
+test('failed upload preserves the saved Key when no privileged transport exists',async()=>{
+  let requests=0;
   const {c,values}=context({
-    GM:{xmlHttpRequest:()=>{gmCalls++;throw new Error('unexpected GM upload')}},
     fetch:async()=>{requests++;throw new TypeError('Load failed')}
   });
-  await assert.rejects(c.uploadImage(new File(['image'],'fixture.jpg',{type:'image/jpeg'})),/Load failed/);
-  assert.equal(requests,1);assert.equal(gmCalls,0);
+  await assert.rejects(c.uploadImage(new File(['image'],'fixture.jpg',{type:'image/jpeg'})),error=>{
+    assert.match(error.message,/上传请求失败/);
+    assert.match(error.message,/api\.nodeimage\.com/);
+    assert.match(error.message,/Load failed/);
+    return true;
+  });
+  assert.equal(requests,1);
   assert.equal(values.get('nodeimage_apiKey'),'test-key');
+});
+
+test('CORS upload failure falls back to privileged binary multipart transport',async()=>{
+  let nativeRequests=0,gmRequest;
+  const bytes=Uint8Array.from([0xff,0xd8,0x00,0x80,0xff,0xd9]);
+  const {c}=context({
+    GM:{xmlHttpRequest:details=>{
+      gmRequest=details;
+      setTimeout(()=>details.onload({status:200,responseText:JSON.stringify({success:true,links:{direct:'https://cdn.nodeimage.com/i/fallback.jpg'}})}),0);
+      return {abort(){}};
+    }},
+    fetch:async()=>{nativeRequests++;throw new TypeError('Failed to fetch')}
+  });
+  const output=await c.uploadImage(new File([bytes],'fallback.jpg',{type:'image/jpeg'}));
+  assert.equal(nativeRequests,1);
+  assert.equal(gmRequest.anonymous,true);
+  assert.equal(gmRequest.headers['X-API-Key'],'test-key');
+  assert.match(gmRequest.headers['Content-Type'],/^multipart\/form-data; boundary=/);
+  const body=new Uint8Array(await gmRequest.data.arrayBuffer());
+  assert.ok(body.some((value,index)=>value===0xff&&body[index+1]===0xd8&&body[index+2]===0x00&&body[index+3]===0x80));
+  assert.equal(output.markdown,'![fallback](https://cdn.nodeimage.com/i/fallback.jpg)');
+});
+
+test('gallery mutations reuse the privileged fallback after a CORS failure',async()=>{
+  let nativeRequests=0,gmRequest;
+  const {c}=context({
+    GM:{xmlHttpRequest:details=>{
+      gmRequest=details;
+      setTimeout(()=>details.onload({status:200,responseText:'{"success":true}'}),0);
+      return {abort(){}};
+    }},
+    fetch:async()=>{nativeRequests++;throw new TypeError('Failed to fetch')}
+  });
+  const data=await c.apiJson('https://api.nodeimage.com/api/v1/delete/fixture',{method:'DELETE'});
+  assert.equal(nativeRequests,1);
+  assert.equal(gmRequest.method,'DELETE');
+  assert.equal(gmRequest.anonymous,true);
+  assert.equal(data.success,true);
 });
 
 for (const status of [401,403]) {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NSimg助手 JS
 // @namespace    https://github.com/5hux1n/nsimg
-// @version      1.0.2
+// @version      1.0.3
 // @description  为 NodeSeek 提供 NodeImage 图片上传与管理的跨平台 Userscript 版本
 // @match        https://www.nodeseek.com/*
 // @match        https://nodeseek.com/*
@@ -12,6 +12,7 @@
 // @grant        GM.deleteValue
 // @grant        GM.xmlHttpRequest
 // @grant        GM.openInTab
+// @connect      api.nodeimage.com
 // ==/UserScript==
 const NSIMG_API = {
   upload: 'https://api.nodeimage.com/api/upload',
@@ -78,6 +79,14 @@ async function parseFetchResponse(response){
   try{data=text?JSON.parse(text):null}catch(_){data=null}
   return {status:response.status,text,data,response};
 }
+function hasPrivilegedRequest(){return NSIMG_HAS_GM&&typeof GM.xmlHttpRequest==='function'}
+function transportError(operation,url,primary,fallback){
+  const first=String(primary?.message||primary||'未知网络错误').trim();
+  const second=fallback?`；脚本管理器回退也失败：${String(fallback.message||fallback).trim()}`:'';
+  const error=new Error(`${operation}请求失败（${url}）：${first}${second}。请确认脚本已允许访问 api.nodeimage.com，并检查当前网络。`);
+  error.cause=primary;
+  return error;
+}
 async function safariMutation(url,{method='POST',headers={},data=null}={}){
   // Safari/Userscripts: mutations intentionally use native fetch with credentials
   // omitted. A Safari-compatible NodeImage userscript uses this path; unlike
@@ -85,6 +94,27 @@ async function safariMutation(url,{method='POST',headers={},data=null}={}){
   // caused NodeImage POST/DELETE to return HTTP 500 on iOS.
   const response=await fetch(url,{method,headers,body:data,credentials:'omit',mode:'cors',cache:'no-store'});
   return parseFetchResponse(response);
+}
+async function mutationRequest(url,{method='POST',headers={},data=null}={}){
+  try{return await safariMutation(url,{method,headers,data})}
+  catch(nativeError){
+    if(!hasPrivilegedRequest())throw transportError('接口',url,nativeError);
+    // The upload endpoint currently rejects the browser CORS preflight. A
+    // userscript manager can send the same request without that preflight.
+    // Keep the native error when the fallback itself fails so the original
+    // browser diagnosis remains available to the user.
+    try{return await gmRequest({method,url,headers,data,anonymous:true})}
+    catch(fallbackError){throw transportError('接口',url,nativeError,fallbackError)}
+  }
+}
+async function multipartUploadBody(file){
+  const boundary=`----NSimg${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
+  const name=String(file?.name||`image-${Date.now()}.jpg`).replace(/["\\\r\n]/g,'_');
+  const type=String(file?.type||'application/octet-stream');
+  const bytes=await file.arrayBuffer();
+  const head=`--${boundary}\r\nContent-Disposition: form-data; name="image"; filename="${name}"\r\nContent-Type: ${type}\r\n\r\n`;
+  const tail=`\r\n--${boundary}--\r\n`;
+  return {body:new Blob([head,bytes,tail]),contentType:`multipart/form-data; boundary=${boundary}`};
 }
 async function getStoredKey(){
   if(NSIMG_HAS_GM && typeof GM.getValue === 'function') return String(await GM.getValue(NSIMG_KEY, '') || '').trim();
@@ -118,11 +148,11 @@ async function apiJson(url, options={}){
   const key=await ensureKey(); if(!key) throw new Error('NO_API_KEY');
   const method=(options.method||'GET').toUpperCase();
   const headers={Accept:'application/json','X-API-Key':key,...(options.headers||{})};
-  // GET stays on the privileged Userscripts transport. Safari mutations use
-  // native fetch; this is the same transport already verified for uploads.
+  // GET stays on the privileged Userscripts transport. Mutations use native
+  // fetch first and transparently fall back when the browser preflight fails.
   const r=(method==='GET')
     ? await gmRequest({method,url,headers,data:options.data})
-    : await safariMutation(url,{method,headers,data:options.data});
+    : await mutationRequest(url,{method,headers,data:options.data});
   if(r.status===401||r.status===403){const e=new Error(`HTTP ${r.status}：${r.data?.error||r.data?.message||'接口拒绝了请求'}（已保留 API Key）`);e.status=r.status;throw e;}
   if(r.status<200||r.status>=300) throw new Error(r.data?.error||r.data?.message||r.text||`HTTP ${r.status}`);
   if(r.data?.success===false) throw new Error(r.data.error||r.data.message||'NodeImage 操作失败');
@@ -131,14 +161,27 @@ async function apiJson(url, options={}){
 
 async function uploadImage(file){
   const key=await ensureKey(); if(!key) throw new Error('NO_API_KEY');
-  const form=new FormData();
-  form.append('image',file,file.name||`image-${Date.now()}.jpg`);
-  // Do not set Content-Type manually. Safari must generate the multipart boundary.
-  const r=await safariMutation(NSIMG_API.upload,{
-    method:'POST',
-    headers:{Accept:'application/json','X-API-Key':key},
-    data:form
-  });
+  let r;
+  try{
+    const form=new FormData();
+    form.append('image',file,file.name||`image-${Date.now()}.jpg`);
+    // Do not set Content-Type manually. Safari must generate the multipart boundary.
+    r=await safariMutation(NSIMG_API.upload,{
+      method:'POST',
+      headers:{Accept:'application/json','X-API-Key':key},
+      data:form
+    });
+  }catch(nativeError){
+    if(!hasPrivilegedRequest())throw transportError('上传',NSIMG_API.upload,nativeError);
+    try{
+      const encoded=await multipartUploadBody(file);
+      r=await gmRequest({
+        method:'POST',url:NSIMG_API.upload,anonymous:true,
+        headers:{Accept:'application/json','X-API-Key':key,'Content-Type':encoded.contentType},
+        data:encoded.body
+      });
+    }catch(fallbackError){throw transportError('上传',NSIMG_API.upload,nativeError,fallbackError)}
+  }
   if(r.status===401||r.status===403)throw new Error(`HTTP ${r.status}：${r.data?.error||r.data?.message||'上传请求被拒绝'}（已保留 API Key）`);
   if(r.status<200||r.status>=300) throw new Error(r.data?.error||r.data?.message||r.text||`HTTP ${r.status}`);
   if(r.data?.success===false) throw new Error(r.data.error||r.data.message||'NodeImage 上传失败');
@@ -176,29 +219,15 @@ async function deleteImage(imageId) {
   const key = await ensureKey();
   if (!key) throw new Error('AUTH_REQUIRED');
 
-  const response = await fetch(
-    `https://api.nodeimage.com/api/v1/delete/${encodeURIComponent(imageId)}`,
-    {
-      method: 'DELETE',
-      mode: 'cors',
-      credentials: 'omit',
-      cache: 'no-store',
-      headers: {
-        'Accept': 'application/json',
-        'X-API-Key': key
-      }
-    }
+  const r = await mutationRequest(
+    `${NSIMG_API.delete}${encodeURIComponent(imageId)}`,
+    {method:'DELETE',headers:{Accept:'application/json','X-API-Key':key}}
   );
-
-  const text = await response.text();
-  let data = null;
-  try { data = text ? JSON.parse(text) : {}; } catch (_) {}
-
-  if (!response.ok || (data && data.success === false)) {
-    const message = data?.error || data?.message || text || `HTTP ${response.status}`;
+  if (r.status < 200 || r.status >= 300 || (r.data && r.data.success === false)) {
+    const message = r.data?.error || r.data?.message || r.text || `HTTP ${r.status}`;
     throw new Error(message);
   }
-  return data || { success: true };
+  return r.data || { success: true };
 }
 const NSIMG_STYLE = `
 :root{--ns-bg:var(--body-bg,#fff);--ns-card:var(--block-bg,#fff);--ns-text:var(--font-color,#24292f);--ns-muted:var(--font-secondary-color,#7a7f87);--ns-line:var(--border-color,#e7e9ec);--ns-soft:rgba(127,127,127,.09);--ns-accent:#2f6feb}
@@ -238,12 +267,12 @@ function modal(title,subtitle){lockPage();const r=document.createElement('div');
 function lightbox(url){lockPage();const r=document.createElement('div');r.className='nsimg-lightbox';const img=document.createElement('img');img.src=url;img.alt='NodeImage 原图';const b=document.createElement('button');b.innerHTML=ICON.close;b.setAttribute('aria-label','关闭');r.append(img,b);const close=()=>{r.remove();unlockPage()};b.onclick=close;r.onclick=e=>{if(e.target===r)close()};document.body.appendChild(r)}
 function showError(title,message){const m=modal(title,'可长按复制错误信息');const pre=document.createElement('pre');pre.className='nsimg-error';pre.textContent=String(message||'未知错误');pre.style.cssText='white-space:pre-wrap;word-break:break-word;margin:0;font-size:12px;line-height:1.55;user-select:text;-webkit-user-select:text';m.body.appendChild(pre);return m}
 async function openSettings(){
-  const m=modal('NSimg助手','NodeImage 设置 · 1.0.2');
+  const m=modal('NSimg助手','NodeImage 设置 · 1.0.3');
   const key=await getStoredKey();
   m.root.classList.add('nsimg-settings-modal');
   const subtitle=m.root.querySelector('.nsimg-head small');
   subtitle.classList.add('nsimg-settings-subtitle');
-  subtitle.innerHTML='<span>设置 · 1.0.2</span><button type="button" class="nsimg-text-button" data-a="login">打开 NodeImage ↗</button>';
+  subtitle.innerHTML='<span>设置 · 1.0.3</span><button type="button" class="nsimg-text-button" data-a="login">打开 NodeImage ↗</button>';
   subtitle.querySelector('[data-a=login]').onclick=openNodeImage;
   m.body.innerHTML=`<div class="nsimg-settings"><div class="nsimg-key-field"><div class="nsimg-key-label"><span>API Key</span><button type="button" class="nsimg-text-button" data-a="clear">清除</button></div><textarea aria-label="API Key" rows="3" placeholder="粘贴 NodeImage API Key" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea></div><div class="nsimg-actions"><button type="button" data-a="retry">获取 apikey</button><button type="button" data-a="save">保存</button></div><div class="nsimg-note">粘贴后点击保存。获取失败不会清除已保存的 Key。</div><div class="nsimg-settings-footer"><div class="nsimg-profile-links" role="navigation" aria-label="作者主页"><a class="nsimg-github" href="https://github.com/5hux1n/nsimg" target="_blank" rel="noopener noreferrer" title="GitHub · 5hux1n/nsimg" aria-label="打开 GitHub 项目"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.48 2 2 6.58 2 12.23c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.49 0-.24-.01-1.05-.01-1.9-2.78.62-3.37-1.21-3.37-1.21-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.63.07-.63 1 .08 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.66.35-1.11.64-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.35 9.35 0 0 1 12 6.94c.85 0 1.71.12 2.51.35 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.05.36.32.68.95.68 1.92 0 1.39-.01 2.5-.01 2.84 0 .27.18.59.69.49A10.23 10.23 0 0 0 22 12.23C22 6.58 17.52 2 12 2Z"/></svg><span>GitHub</span></a><a class="nsimg-github" href="https://www.nodeseek.com/space/6666" target="_blank" rel="noopener noreferrer" title="NodeSeek · 个人主页" aria-label="打开 NodeSeek 个人主页"><svg viewBox="0 0 128 128" aria-hidden="true"><g fill="none" stroke="#d2d2d2" stroke-width="8"><path d="M18 34C-2 57-2 73 18 96M35 34C8 54 8 76 35 96M110 34c20 23 20 39 0 62M93 34c27 20 27 42 0 62"/></g><circle cx="64" cy="64" r="35" fill="#0a0a0a"/><g fill="#fff"><rect x="49" y="51" width="8" height="17" rx="4"/><rect x="71" y="51" width="8" height="17" rx="4"/></g></svg><span>NodeSeek</span></a></div></div></div>`;
   const input=m.body.querySelector('textarea');input.value=key;
