@@ -119,6 +119,14 @@ test('paste events are claimed once across duplicate helpers',()=>{
   assert.equal(c.claimImagePaste(event),false);
 });
 
+test('identical markdown is inserted at most once during the dedupe window',()=>{
+  const attributes=new Map();
+  const {c}=context({document:{documentElement:{getAttribute:k=>attributes.get(k)||null,setAttribute:(k,v)=>attributes.set(k,v)}}});
+  assert.equal(c.claimMarkdownInsert('![image](https://cdn.nodeimage.com/i/a.jpg)'),true);
+  assert.equal(c.claimMarkdownInsert('![image](https://cdn.nodeimage.com/i/a.jpg)'),false);
+  assert.equal(c.claimMarkdownInsert('![image](https://cdn.nodeimage.com/i/b.jpg)'),true);
+});
+
 for (const status of [401,403]) {
   test(`HTTP ${status} from upload, gallery and session lookup never clears saved Key`,async()=>{
     const {c,values}=context({fetch:async()=>new Response('{"error":"rejected"}',{status})});

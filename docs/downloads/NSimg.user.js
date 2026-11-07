@@ -235,6 +235,14 @@ function claimImagePaste(event){
   catch(_){try{event.__nsimgImagePasteHandled=true}catch(_){return false}}
   return true;
 }
+function claimMarkdownInsert(markdown){
+  const raw=String(markdown||'').trim();
+  if(!raw||typeof document==='undefined'||!document.documentElement)return true;
+  const root=document.documentElement,attr='data-nsimg-last-markdown',now=Date.now();
+  const previous=root.getAttribute(attr)||'',sep=previous.indexOf('|');
+  if(sep>0&&now-Number(previous.slice(0,sep))<5000&&previous.slice(sep+1)===raw)return false;
+  root.setAttribute(attr,`${now}|${raw}`);return true;
+}
 const NSIMG_STYLE = `
 :root{--ns-bg:var(--body-bg,#fff);--ns-card:var(--block-bg,#fff);--ns-text:var(--font-color,#24292f);--ns-muted:var(--font-secondary-color,#7a7f87);--ns-line:var(--border-color,#e7e9ec);--ns-soft:rgba(127,127,127,.09);--ns-accent:#2f6feb}
 .nsimg-toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translate(-50%,18px);z-index:2147483647;box-sizing:border-box;max-width:calc(100vw - 28px);min-height:42px;padding:9px 10px 9px 13px;border:1px solid var(--ns-line);border-radius:12px;background:var(--ns-card);color:var(--ns-text);box-shadow:0 8px 28px rgba(0,0,0,.14);font-size:14px;line-height:20px;opacity:0;pointer-events:none;transition:.18s;display:flex;align-items:center;gap:9px}.nsimg-toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}.nsimg-toast>span{min-width:0;overflow-wrap:anywhere}.nsimg-toast button{flex:0 0 auto;white-space:nowrap;border:1px solid var(--ns-line);border-radius:8px;padding:5px 9px;background:var(--ns-soft);color:var(--ns-text);font:inherit;line-height:18px}
@@ -306,13 +314,14 @@ const NSIMG_BRIDGE_CHANNEL='nsimg-editor-bridge-v1';
 let nsimgBridgeReady=false;
 function installEditorBridge(){
   if(nsimgBridgeReady)return; nsimgBridgeReady=true;
-  const code=`(()=>{if(window.__NSIMG_EDITOR_BRIDGE__)return;window.__NSIMG_EDITOR_BRIDGE__=1;window.addEventListener('message',e=>{const d=e.data;if(e.source!==window||!d||d.channel!=='${NSIMG_BRIDGE_CHANNEL}'||d.type!=='insert')return;let ok=false;try{const cm=window.codemirrorInstance;if(cm&&typeof cm.replaceSelection==='function'){cm.replaceSelection(String(d.markdown||''));cm.focus();ok=true}}catch(_){}window.postMessage({channel:'${NSIMG_BRIDGE_CHANNEL}',type:'result',id:d.id,ok},'*')})})();`;
+  const code=`(()=>{if(window.__NSIMG_EDITOR_BRIDGE__)return;window.__NSIMG_EDITOR_BRIDGE__=1;window.addEventListener('message',e=>{const d=e.data;if(e.source!==window||!d||d.channel!=='${NSIMG_BRIDGE_CHANNEL}'||d.type!=='insert')return;let ok=false;try{const cm=window.codemirrorInstance;if(cm&&typeof cm.replaceSelection==='function'){cm.replaceSelection(String(d.markdown||''));cm.focus();ok=true;document.documentElement.setAttribute('data-nsimg-bridge-insert-id',String(d.id||''))}}catch(_){}window.postMessage({channel:'${NSIMG_BRIDGE_CHANNEL}',type:'result',id:d.id,ok},'*')})})();`;
   const s=document.createElement('script');s.textContent=code;(document.head||document.documentElement).appendChild(s);s.remove();
 }
 function editorTextarea(){return document.querySelector('#editor-body .CodeMirror textarea, #code-mirror-editor .CodeMirror textarea, .CodeMirror textarea')}
 function insertMarkdown(md){
   const raw=String(md||'').trim();
   const block=raw?`\n${raw}\n`:'';
+  if(!claimMarkdownInsert(raw))return Promise.resolve(true);
   installEditorBridge();
   return new Promise(resolve=>{
     const id=`${Date.now()}-${Math.random()}`; let done=false;
@@ -320,7 +329,8 @@ function insertMarkdown(md){
     const onMessage=e=>{const d=e.data;if(e.source===window&&d?.channel===NSIMG_BRIDGE_CHANNEL&&d?.type==='result'&&d.id===id)finish(Boolean(d.ok))};
     window.addEventListener('message',onMessage);
     window.postMessage({channel:NSIMG_BRIDGE_CHANNEL,type:'insert',id,markdown:block},'*');
-    const timer=setTimeout(()=>{
+      const timer=setTimeout(()=>{
+        if(document.documentElement?.getAttribute('data-nsimg-bridge-insert-id')===id)return finish(true);
       // Last-resort fallback for pages where inline bridge injection is blocked.
       const ta=editorTextarea(); if(!ta)return finish(false); ta.focus();
       try{const text=block;const a=ta.selectionStart||0,b=ta.selectionEnd||a;ta.setRangeText(text,a,b,'end');ta.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'insertText',data:text}));finish(true)}catch(_){finish(false)}
