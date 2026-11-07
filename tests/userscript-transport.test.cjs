@@ -112,6 +112,13 @@ test('gallery mutations reuse the privileged fallback after a CORS failure',asyn
   assert.equal(data.success,true);
 });
 
+test('paste events are claimed once across duplicate helpers',()=>{
+  const {c}=context();
+  const event={};
+  assert.equal(c.claimImagePaste(event),true);
+  assert.equal(c.claimImagePaste(event),false);
+});
+
 for (const status of [401,403]) {
   test(`HTTP ${status} from upload, gallery and session lookup never clears saved Key`,async()=>{
     const {c,values}=context({fetch:async()=>new Response('{"error":"rejected"}',{status})});

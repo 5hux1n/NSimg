@@ -16,8 +16,8 @@
 
 选择一种安装方式：
 
-- **Chrome / Edge 扩展：**下载 [v1.0.3 扩展 ZIP](https://github.com/5hux1n/NSimg/releases/download/v1.0.3/nsimg-v1.0.3.zip)，解压到固定目录。在 `chrome://extensions` 或 `edge://extensions` 开启开发者模式，选择“加载已解压的扩展程序”，指向解压后的 `nsimg-v1.0.3` 文件夹。
-- **独立 JS：**下载 [v1.0.3 用户脚本](https://github.com/5hux1n/NSimg/releases/download/v1.0.3/NSimg.user.js)，导入支持用户脚本的浏览器或脚本管理器，并允许它在 `nodeseek.com` 上运行。
+- **Chrome / Edge 扩展：**下载 [v1.0.4 扩展 ZIP](https://github.com/5hux1n/NSimg/releases/download/v1.0.4/nsimg-v1.0.4.zip)，解压到固定目录。在 `chrome://extensions` 或 `edge://extensions` 开启开发者模式，选择“加载已解压的扩展程序”，指向解压后的 `nsimg-v1.0.4` 文件夹。
+- **独立 JS：**下载 [v1.0.4 用户脚本](https://github.com/5hux1n/NSimg/releases/download/v1.0.4/NSimg.user.js)，导入支持用户脚本的浏览器或脚本管理器，并允许它在 `nodeseek.com` 上运行。
 
 当前未发布到浏览器扩展商店。安装扩展后请保留解压目录。
 
@@ -40,8 +40,8 @@
 
 | 版本 | 环境 | 状态 |
 | --- | --- | --- |
-| 扩展 | Chrome、Edge 的 Manifest V3 环境 | 支持；v1.0.3 尚未完成浏览器实测 |
-| 独立 JS | Alook | 原有上传流程已通过用户真机测试；1.0.3 回退路径待设备复测 |
+| 扩展 | Chrome、Edge 的 Manifest V3 环境 | 支持；v1.0.4 尚未完成浏览器实测 |
+| 独立 JS | Alook | 原有上传流程已通过用户真机测试；1.0.4 回退路径待设备复测 |
 | 独立 JS | Safari + Userscripts | 早期版本已实测；本次设置界面尚未完成设备复测 |
 
 
@@ -57,7 +57,7 @@
 - 资料卡统计区下方增加分隔线；保留 Seek.li、NodeQuality、NodeScriptKit、NodeHatch、NFD2.0 和幸运抽奖六个入口，使用两行纯文字链接与「｜」分隔，保留 NodeScriptKit 全名。
 - 隐藏 beta 标识、顶部轮播、右侧商业广告、最新注册用户及板块简介；桌面左侧分类去重后合并至顶部导航。
 
-[下载 CSS 文件](https://github.com/5hux1n/NSimg/releases/download/v1.0.3/nodeseek.min.css) · [查看仓库中的 CSS](styles/nodeseek.min.css)
+[下载 CSS 文件](https://github.com/5hux1n/NSimg/releases/download/v1.0.4/nodeseek.min.css) · [查看仓库中的 CSS](styles/nodeseek.min.css)
 
 进入论坛个人资料中的自定义 style，复制下面代码块中的全部 CSS，替换原有样式后保存并刷新。代码块右上角的复制按钮可复制完整内容，无需安装 JS。样式使用 CSS 嵌套、`:has()` 和锚点定位，需要支持这些特性的浏览器。
 
