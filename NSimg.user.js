@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NSimg助手 JS
 // @namespace    https://github.com/5hux1n/nsimg
-// @version      1.0.2
+// @version      1.0.3
 // @description  为 NodeSeek 提供 NodeImage 图片上传与管理的跨平台 Userscript 版本
 // @match        https://www.nodeseek.com/*
 // @match        https://nodeseek.com/*
@@ -238,12 +238,12 @@ function modal(title,subtitle){lockPage();const r=document.createElement('div');
 function lightbox(url){lockPage();const r=document.createElement('div');r.className='nsimg-lightbox';const img=document.createElement('img');img.src=url;img.alt='NodeImage 原图';const b=document.createElement('button');b.innerHTML=ICON.close;b.setAttribute('aria-label','关闭');r.append(img,b);const close=()=>{r.remove();unlockPage()};b.onclick=close;r.onclick=e=>{if(e.target===r)close()};document.body.appendChild(r)}
 function showError(title,message){const m=modal(title,'可长按复制错误信息');const pre=document.createElement('pre');pre.className='nsimg-error';pre.textContent=String(message||'未知错误');pre.style.cssText='white-space:pre-wrap;word-break:break-word;margin:0;font-size:12px;line-height:1.55;user-select:text;-webkit-user-select:text';m.body.appendChild(pre);return m}
 async function openSettings(){
-  const m=modal('NSimg助手','NodeImage 设置 · 1.0.2');
+  const m=modal('NSimg助手','NodeImage 设置 · 1.0.3');
   const key=await getStoredKey();
   m.root.classList.add('nsimg-settings-modal');
   const subtitle=m.root.querySelector('.nsimg-head small');
   subtitle.classList.add('nsimg-settings-subtitle');
-  subtitle.innerHTML='<span>设置 · 1.0.2</span><button type="button" class="nsimg-text-button" data-a="login">打开 NodeImage ↗</button>';
+  subtitle.innerHTML='<span>设置 · 1.0.3</span><button type="button" class="nsimg-text-button" data-a="login">打开 NodeImage ↗</button>';
   subtitle.querySelector('[data-a=login]').onclick=openNodeImage;
   m.body.innerHTML=`<div class="nsimg-settings"><div class="nsimg-key-field"><div class="nsimg-key-label"><span>API Key</span><button type="button" class="nsimg-text-button" data-a="clear">清除</button></div><textarea aria-label="API Key" rows="3" placeholder="粘贴 NodeImage API Key" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea></div><div class="nsimg-actions"><button type="button" data-a="retry">获取 apikey</button><button type="button" data-a="save">保存</button></div><div class="nsimg-note">粘贴后点击保存。获取失败不会清除已保存的 Key。</div><div class="nsimg-settings-footer"><div class="nsimg-profile-links" role="navigation" aria-label="作者主页"><a class="nsimg-github" href="https://github.com/5hux1n/nsimg" target="_blank" rel="noopener noreferrer" title="GitHub · 5hux1n/nsimg" aria-label="打开 GitHub 项目"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.48 2 2 6.58 2 12.23c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.49 0-.24-.01-1.05-.01-1.9-2.78.62-3.37-1.21-3.37-1.21-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.63.07-.63 1 .08 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.66.35-1.11.64-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.35 9.35 0 0 1 12 6.94c.85 0 1.71.12 2.51.35 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.05.36.32.68.95.68 1.92 0 1.39-.01 2.5-.01 2.84 0 .27.18.59.69.49A10.23 10.23 0 0 0 22 12.23C22 6.58 17.52 2 12 2Z"/></svg><span>GitHub</span></a><a class="nsimg-github" href="https://www.nodeseek.com/space/6666" target="_blank" rel="noopener noreferrer" title="NodeSeek · 个人主页" aria-label="打开 NodeSeek 个人主页"><svg viewBox="0 0 128 128" aria-hidden="true"><g fill="none" stroke="#d2d2d2" stroke-width="8"><path d="M18 34C-2 57-2 73 18 96M35 34C8 54 8 76 35 96M110 34c20 23 20 39 0 62M93 34c27 20 27 42 0 62"/></g><circle cx="64" cy="64" r="35" fill="#0a0a0a"/><g fill="#fff"><rect x="49" y="51" width="8" height="17" rx="4"/><rect x="71" y="51" width="8" height="17" rx="4"/></g></svg><span>NodeSeek</span></a></div></div></div>`;
   const input=m.body.querySelector('textarea');input.value=key;

@@ -16,8 +16,8 @@
 
 选择一种安装方式：
 
-- **Chrome / Edge 扩展：**下载 [v1.0.2 扩展 ZIP](https://github.com/5hux1n/NSimg/releases/download/v1.0.2/nsimg-v1.0.2.zip)，解压到固定目录。在 `chrome://extensions` 或 `edge://extensions` 开启开发者模式，选择“加载已解压的扩展程序”，指向解压后的 `nsimg-v1.0.2` 文件夹。
-- **独立 JS：**下载 [v1.0.2 用户脚本](https://github.com/5hux1n/NSimg/releases/download/v1.0.2/NSimg.user.js)，导入支持用户脚本的浏览器或脚本管理器，并允许它在 `nodeseek.com` 上运行。
+- **Chrome / Edge 扩展：**下载 [v1.0.3 扩展 ZIP](https://github.com/5hux1n/NSimg/releases/download/v1.0.3/nsimg-v1.0.3.zip)，解压到固定目录。在 `chrome://extensions` 或 `edge://extensions` 开启开发者模式，选择“加载已解压的扩展程序”，指向解压后的 `nsimg-v1.0.3` 文件夹。
+- **独立 JS：**下载 [v1.0.3 用户脚本](https://github.com/5hux1n/NSimg/releases/download/v1.0.3/NSimg.user.js)，导入支持用户脚本的浏览器或脚本管理器，并允许它在 `nodeseek.com` 上运行。
 
 当前未发布到浏览器扩展商店。安装扩展后请保留解压目录。
 
@@ -40,7 +40,7 @@
 
 | 版本 | 环境 | 状态 |
 | --- | --- | --- |
-| 扩展 | Chrome、Edge 的 Manifest V3 环境 | 支持；v1.0.2 尚未完成浏览器实测 |
+| 扩展 | Chrome、Edge 的 Manifest V3 环境 | 支持；v1.0.3 尚未完成浏览器实测 |
 | 独立 JS | Alook | 当前上传流程已通过用户真机测试 |
 | 独立 JS | Safari + Userscripts | 早期版本已实测；本次设置界面尚未完成设备复测 |
 
