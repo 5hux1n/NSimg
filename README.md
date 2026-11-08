@@ -74,3 +74,5 @@ body{--r:max(8px,calc((100vw - 1080px)/2));--n:#111;--f:#555;--g:#f5f5f5;--l:#c9
 
 - **图片格式：**扩展上传前检查 PNG、JPEG、GIF、WebP、BMP 的实际文件头；独立 JS 将所选图片文件交给浏览器上传。
 - **版本记录：**查看 [更新日志](CHANGELOG.md)及 [GitHub Releases](https://github.com/5hux1n/NSimg/releases)。
+
+感谢 [@k08255-lxm](https://github.com/k08255-lxm) 提交 PR，帮助修复粘贴图片时重复上传的问题。
